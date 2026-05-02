@@ -60,6 +60,19 @@ const response = await fetch("http://127.0.0.1:11434/api/generate", {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Shows problems on sidebar
+app.get("/api/problems", async (req, res) => {
+    try {
+        // Orders the problems on the sidebar by most recent
+        const problems = await Problem.find().sort({ createdAt: -1 });
+    res.json({ problems });
+  } catch (err) {
+    console.error("GET PROBLEMS ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 async function warmUpOllama() {
   try {
     await fetch("http://127.0.0.1:11434/api/generate", {

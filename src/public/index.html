@@ -57,6 +57,25 @@
       return messageDiv;
     }
 
+    // Loads previous problems and displays them on sidebar
+    async function loadPreviousProblems() {
+      try {
+        const res = await fetch("/api/problems");
+        const data = await res.json();
+        const list = document.getElementById("problem-list");
+        list.innerHTML = "";
+
+        data.problems.forEach((p) => {
+          const li = document.createElement("li");
+          li.innerText = p.question;
+          list.appendChild(li);
+        });
+      } catch {
+        console.error("Failed to load problems");
+      }
+    }
+
+
     chatForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -79,10 +98,15 @@
         const data = await response.json();
         loadingMsg.innerText =
           data.solution || "Error solving problem.";
+
+          loadPreviousProblems();
+          
       } catch {
         loadingMsg.innerText = "Something went wrong.";
       }
     });
+
+    loadPreviousProblems();
   </script>
 </body>
 </html>
