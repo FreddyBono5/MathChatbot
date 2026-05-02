@@ -14,8 +14,6 @@ body {
     display: flex;
     height: 100vh;
 }
-
-/* Sidebar */
 .sidebar {
     width: 250px;
     background-color: #1f2933;
@@ -83,7 +81,6 @@ body {
     color: #555;
 }
 
-/* Chat Box */
 .chat-box {
     flex-grow: 1;
     padding: 20px;
