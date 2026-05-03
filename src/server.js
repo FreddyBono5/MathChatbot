@@ -68,9 +68,23 @@ app.get("/api/problems", async (req, res) => {
         const problems = await Problem.find().sort({ createdAt: -1 });
     res.json({ problems });
   } catch (err) {
-    console.error("GET PROBLEMS ERROR:", err);
+    console.error("Error retrieving past problems...", err);
     res.status(500).json({ error: err.message });
   }
+});
+
+// Allows you to view a previous problem from the sidebar
+app.get("/api/problem/:id", async (req, res) => {
+    try {
+        const problem = await Problem.findById(req.params.id);
+
+        if (!problem) return res.status(404).json({ error: "Not found" });
+
+        res.json(problem);
+    } catch (err) {
+        console.error("Error retrieving that problem", err);
+        res.status(500).json({ error: err.message });
+    }
 });
 
 async function warmUpOllama() {

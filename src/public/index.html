@@ -59,7 +59,6 @@
 
     // Loads previous problems and displays them on sidebar
     async function loadPreviousProblems() {
-      try {
         const res = await fetch("/api/problems");
         const data = await res.json();
         const list = document.getElementById("problem-list");
@@ -68,11 +67,21 @@
         data.problems.forEach((p) => {
           const li = document.createElement("li");
           li.innerText = p.question;
+          li.dataset.id = p._id;
+
+          // Allows the problems on the sidebar to be clickable
+          li.addEventListener("click", async () => {
+            const id = li.dataset.id;
+            const res = await fetch("/api/problem/" + id);
+            const data = await res.json();
+
+            addMessage("user", data.question);
+            addMessage("bot", data.solution);
+            chatBox.scrollTop = chatBox.scrollHeight;
+          })
+
           list.appendChild(li);
         });
-      } catch {
-        console.error("Failed to load problems");
-      }
     }
 
 
@@ -100,7 +109,7 @@
           data.solution || "Error solving problem.";
 
           loadPreviousProblems();
-          
+
       } catch {
         loadingMsg.innerText = "Something went wrong.";
       }
