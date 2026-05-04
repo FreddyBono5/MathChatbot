@@ -1,6 +1,10 @@
 # Algebraic Math Tutor
 
-Description
+### Description
+
+The system is a web-based chatbot designed to help users solve basic math problems. Users are able to input questions and equations, and the system generates solutions along with step-by-step explanations. The system uses an LLM to generate both the solutions and the explanations, with responses tailored to be easily understood by individuals in early education. 
+
+This chatbot helps students understand basic math problems more effectively without the need for a human tutor. It acts similarly to a tutor by providing users with a way to receive immediate solutions and explanations for the problems they are struggling to solve. The responses include step-by-step explanations that are easy for someone in early education to understand and follow.
 
 ### Configuration for Use
 
