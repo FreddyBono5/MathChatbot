@@ -61,6 +61,76 @@ const response = await fetch("http://127.0.0.1:11434/api/generate", {
   }
 });
 
+// Endpoint for worded requests 
+app.post("/api/word-solve", async (req, res) => {
+  const { input } = req.body;
+
+  
+  if (!input || typeof input !== "string" || input.trim().length < 5) {
+    return res.status(400).json({
+      error: "Please provide a valid word problem."
+    });
+  }
+
+  const prompt = `
+You are a math tutor.
+
+Solve the following word problem step-by-step.
+First convert worded question into an equation, then solve it.
+Keep explanations simple and step-by-step.
+
+Word Problem:
+${input}
+
+Steps:
+`;
+
+  try {
+    const response = await fetch("http://localhost:11434/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "llama3",
+        prompt,
+        stream: false
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Ollama error ${response.status}: ${errorText}`);
+    }
+
+    const data = await response.json();
+
+    const solution =
+      data.response ||
+      data.message?.content ||
+      data.output ||
+      null;
+
+    if (!solution) {
+      throw new Error("No usable response from Ollama");
+    }
+
+    
+    await Problem.create({
+      question: input,
+      solution,
+      type: "word" // 🔥 ADD THIS (important for future filtering)
+    });
+
+    return res.json({ solution });
+
+  } catch (err) {
+    console.error("WORD SOLVE ERROR:", err);
+
+    return res.status(500).json({
+      error: "Failed to solve word problem"
+    });
+  }
+});
+
 // Shows problems on sidebar
 app.get("/api/problems", async (req, res) => {
     try {
