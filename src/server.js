@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.post("/api/solve", async (req, res) => {
   try {
-    console.log("REQ BODY:", req.body);
+   
 
     const { problem } = req.body;
 
@@ -17,12 +17,8 @@ app.post("/api/solve", async (req, res) => {
       return res.status(400).json({ error: "Problem is required." });
     }
 
-    const prompt = `
-You are an algebra tutor for early learners.
-Explain the solution step-by-step in simple language.
-
-Problem: ${problem}
-`;
+    const prompt = ` You are an algebra tutor for early learners. Explain the solution step-by-step in simple language.
+    Problem: ${problem}`;
 const response = await fetch("http://127.0.0.1:11434/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,12 +52,11 @@ const response = await fetch("http://127.0.0.1:11434/api/generate", {
 
     res.json({ solution });
   } catch (err) {
-    console.error("SOLVE ERROR:", err);
+    console.error("Solve error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Endpoint for worded requests 
 app.post("/api/word-solve", async (req, res) => {
   const { input } = req.body;
 
@@ -72,10 +67,7 @@ app.post("/api/word-solve", async (req, res) => {
     });
   }
 
-  const prompt = `
-You are a math tutor.
-
-Solve the following word problem step-by-step.
+  const prompt = `You are a math tutor. Solve the following word problem step-by-step.
 First convert worded question into an equation, then solve it.
 Keep explanations simple and step-by-step.
 
@@ -117,13 +109,13 @@ Steps:
     await Problem.create({
       question: input,
       solution,
-      type: "word" // 🔥 ADD THIS (important for future filtering)
+      type: "word"
     });
 
     return res.json({ solution });
 
   } catch (err) {
-    console.error("WORD SOLVE ERROR:", err);
+    console.error("Word solving problem error:", err);
 
     return res.status(500).json({
       error: "Failed to solve word problem"
@@ -131,10 +123,8 @@ Steps:
   }
 });
 
-// Shows problems on sidebar
 app.get("/api/problems", async (req, res) => {
     try {
-        // Orders the problems on the sidebar by most recent
         const problems = await Problem.find().sort({ createdAt: -1 });
     res.json({ problems });
   } catch (err) {
@@ -143,7 +133,6 @@ app.get("/api/problems", async (req, res) => {
   }
 });
 
-// Allows you to view a previous problem from the sidebar
 app.get("/api/problem/:id", async (req, res) => {
     try {
         const problem = await Problem.findById(req.params.id);
@@ -170,10 +159,9 @@ app.delete("/api/problem/:id", async (req, res) => {
     }
 });
 
-// Endpoint for clearing history
 app.delete("/api/problems", async (req, res) => {
     try {
-        await Problem.deleteMany({}); // Deletes every document in the problem collection
+        await Problem.deleteMany({}); 
         res.json( { message: "Histoy Cleared" });
     } catch (err) {
         console.error("Error clearing history", err);
