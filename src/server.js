@@ -100,6 +100,17 @@ app.delete("/api/problem/:id", async (req, res) => {
     }
 });
 
+// Endpoint for clearing history
+app.delete("/api/problems", async (req, res) => {
+    try {
+        await Problem.deleteMany({}); // Deletes every document in the problem collection
+        res.json( { message: "Histoy Cleared" });
+    } catch (err) {
+        console.error("Error clearing history", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 async function warmUpOllama() {
   try {
     await fetch("http://127.0.0.1:11434/api/generate", {

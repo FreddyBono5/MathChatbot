@@ -81,6 +81,7 @@
     
               if (res.ok) {
                   await loadPreviousProblems(); // Waits for for refresh to complete
+                  chatBox.innerHTML = ""; // Removes everything inside the chat box as well when the history is cleared
               } else {
                   console.error("Delete failed:", await res.json());
               }
@@ -131,6 +132,13 @@
       } catch {
         loadingMsg.innerText = "Something went wrong.";
       }
+    });
+
+    // Allows the Clear History Button Function
+    document.getElementById("clear-history").addEventListener("click", async () => {
+        await fetch("/api/problems", { method: "DELETE" });
+        await loadPreviousProblems();
+        chatBox.innerHTML = ""; 
     });
 
     loadPreviousProblems();
