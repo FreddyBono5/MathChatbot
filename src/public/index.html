@@ -66,8 +66,25 @@
 
         data.problems.forEach((p) => {
           const li = document.createElement("li");
-          li.innerText = p.question;
           li.dataset.id = p._id;
+
+          const span = document.createElement("span");
+          span.innerText = p.question;
+          li.appendChild(span);
+
+          // Add a button with an "X" for deleting a previous problem
+          const deleteButton = document.createElement("button");
+          deleteButton.innerText = "X";
+          deleteButton.addEventListener("click", async (e) => {
+              e.stopPropagation(); // Ensures that the problem isn't loaded when the "X" is clicked
+              const res = await fetch("/api/problem/" + p._id, { method: "DELETE" });
+    
+              if (res.ok) {
+                  await loadPreviousProblems(); // Waits for for refresh to complete
+              } else {
+                  console.error("Delete failed:", await res.json());
+              }
+          });
 
           // Allows the problems on the sidebar to be clickable
           li.addEventListener("click", async () => {
@@ -78,8 +95,9 @@
             addMessage("user", data.question);
             addMessage("bot", data.solution);
             chatBox.scrollTop = chatBox.scrollHeight;
-          })
+          });
 
+          li.appendChild(deleteButton);
           list.appendChild(li);
         });
     }

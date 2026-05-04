@@ -136,3 +136,33 @@ body {
 .chat-input button:hover {
     background-color: #059669;
 }
+
+#problem-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+#problem-list li span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#problem-list li button {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    color: #f0e5e5;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+#problem-list li button:hover {
+    background: rgba(240, 20, 5, 0.1);
+    color: #fff;
+}

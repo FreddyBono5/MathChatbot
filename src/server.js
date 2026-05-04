@@ -87,6 +87,19 @@ app.get("/api/problem/:id", async (req, res) => {
     }
 });
 
+app.delete("/api/problem/:id", async (req, res) => {
+    try {
+        const problem = await Problem.findByIdAndDelete(req.params.id);
+
+        if (!problem) return res.status(404).json({ error: "Not found" });
+
+        res.json({ message: "Problem deleted" });
+    } catch (err) {
+        console.error("Error deleting problem", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 async function warmUpOllama() {
   try {
     await fetch("http://127.0.0.1:11434/api/generate", {
